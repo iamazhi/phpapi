@@ -1,11 +1,11 @@
 <?php
-require_once '../phpexcel/Classes/PHPExcel.php';
+require_once dirname(__FILE__) . '/../phpexcel/Classes/PHPExcel.php';
 $objPHPExcel = new PHPExcel();
-include "../phpexcel/common.php";
+include dirname(__FILE__) . "/../phpexcel/common.php";
 
 // $_POST["data"] = <<<EOT
 // {
-// "basic":{"title":"福州台江美术"},
+// "params":{"title":"福州台江美术20140701-20140831"},
 // "style":{"A1":"font-size:16;font-bold:true;align-center:true","A2:G2":"font-bold:true","B":"width:20","C":"width:30"},
 // "A1:G1":{"title":"福州台江美术日报表"},
 // "A2:G2":{"id":"序号", "date ":"日期",       "desc ":"摘要",             "income ":"收入", "payout ":"支出", "remain ":"余额", "remark ":"备注"},
@@ -18,10 +18,11 @@ include "../phpexcel/common.php";
 // EOT;
 
 //$_POST["data"] = str_replace("\\", "", $_POST["pldata"]);
-$data = json_decode($_POST["data"], true);
+$data   = json_decode($_POST["data"], true);
+$params = $data["params"];
 
 //表格属性
-$objPHPExcel->getProperties()->setCreator("吾幼内控管理系统")->setTitle($data["basic"]["title"])->setSubject("日记账");
+$objPHPExcel->getProperties()->setCreator("吾幼内控管理系统")->setTitle($params["filename"])->setSubject("日记账");
 $objPHPExcel->setActiveSheetIndex(0);
 $objPHPExcel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(16);
 
@@ -35,7 +36,7 @@ foreach($data["style"] as $scope => $style){
     }
 }
 
-unset($data["basic"]);
+unset($data["params"]);
 unset($data["style"]);
 
 //填充真实数据
